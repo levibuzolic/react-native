@@ -30,7 +30,7 @@ type EventMapping = {
 let nativeEventEmitter;
 
 /**
- * Simple wrappers around NativeAnimatedModule to provide flow and autocmplete support for
+ * Simple wrappers around NativeAnimatedModule to provide flow and autocomplete support for
  * the native module methods
  */
 const API = {
