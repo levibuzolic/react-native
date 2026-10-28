@@ -936,6 +936,27 @@ export default {
       },
     },
     {
+      title: 'Border Curve Circular Control (iOS)',
+      name: 'border-curve-circular',
+      render(): React.Node {
+        return <ViewBorderCurveExample continuous={false} />;
+      },
+    },
+    {
+      title: 'Border Curve Boundaries (iOS)',
+      name: 'border-curve-boundaries',
+      render(): React.Node {
+        return <ViewBorderCurveExample boundaryCases />;
+      },
+    },
+    {
+      title: 'Border Curve Boundaries Circular Control (iOS)',
+      name: 'border-curve-boundaries-circular',
+      render(): React.Node {
+        return <ViewBorderCurveExample boundaryCases continuous={false} />;
+      },
+    },
+    {
       title: 'Border Style',
       name: 'border-style',
       render(): React.Node {

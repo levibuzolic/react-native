@@ -5,34 +5,22 @@ appId: ${APP_ID}
       platform: iOS
     commands:
       - runFlow:
-          file: ../helpers/open-example.yml
+          file: ../helpers/capture-border-curve.yml
           env:
-            EXAMPLE_URL: rntester://example/ViewExample/border-curve
-      - extendedWaitUntil:
-          visible:
-            id: 'view-border-curve-example'
-          timeout: 15000
-      - waitForAnimationToEnd:
-          timeout: 5000
-      - takeScreenshot:
-          path: ${VISUAL_OUTPUT_DIR}/view/border-curve/initial
-          cropOn:
-            id: 'view-border-curve-example'
-      - tapOn:
-          id: 'border-curve-toggle'
-      - waitForAnimationToEnd:
-          timeout: 5000
-      - assertVisible: 'Toggle curve: circular'
-      - takeScreenshot:
-          path: ${VISUAL_OUTPUT_DIR}/view/border-curve/circular
-          cropOn:
-            id: 'view-border-curve-example'
-      - tapOn:
-          id: 'border-curve-toggle'
-      - waitForAnimationToEnd:
-          timeout: 5000
-      - assertVisible: 'Toggle curve: continuous'
-      - takeScreenshot:
-          path: ${VISUAL_OUTPUT_DIR}/view/border-curve/continuous
-          cropOn:
-            id: 'view-border-curve-example'
+            EXAMPLE: border-curve
+            WAIT_FOR_IMAGES: false
+      - runFlow:
+          file: ../helpers/capture-border-curve.yml
+          env:
+            EXAMPLE: border-curve-circular
+            WAIT_FOR_IMAGES: false
+      - runFlow:
+          file: ../helpers/capture-border-curve.yml
+          env:
+            EXAMPLE: border-curve-boundaries
+            WAIT_FOR_IMAGES: true
+      - runFlow:
+          file: ../helpers/capture-border-curve.yml
+          env:
+            EXAMPLE: border-curve-boundaries-circular
+            WAIT_FOR_IMAGES: true
