@@ -13,6 +13,7 @@
 import type {RNTesterModule} from '../../types/RNTesterTypes';
 
 import RNTesterText from '../../components/RNTesterText';
+import ViewBorderCurveExample from './ViewBorderCurveExample';
 import * as React from 'react';
 import {useState} from 'react';
 import {
@@ -925,6 +926,13 @@ export default {
             )}
           </View>
         );
+      },
+    },
+    {
+      title: 'Border Curve (iOS)',
+      name: 'border-curve',
+      render(): React.Node {
+        return <ViewBorderCurveExample />;
       },
     },
     {

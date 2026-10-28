@@ -1,0 +1,38 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - runFlow:
+          file: ../helpers/open-example.yml
+          env:
+            EXAMPLE_URL: rntester://example/ViewExample/border-curve
+      - extendedWaitUntil:
+          visible:
+            id: 'view-border-curve-example'
+          timeout: 15000
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - takeScreenshot:
+          path: ${VISUAL_OUTPUT_DIR}/view/border-curve/initial
+          cropOn:
+            id: 'view-border-curve-example'
+      - tapOn:
+          id: 'border-curve-toggle'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - assertVisible: 'Toggle curve: circular'
+      - takeScreenshot:
+          path: ${VISUAL_OUTPUT_DIR}/view/border-curve/circular
+          cropOn:
+            id: 'view-border-curve-example'
+      - tapOn:
+          id: 'border-curve-toggle'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - assertVisible: 'Toggle curve: continuous'
+      - takeScreenshot:
+          path: ${VISUAL_OUTPUT_DIR}/view/border-curve/continuous
+          cropOn:
+            id: 'view-border-curve-example'
