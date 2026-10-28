@@ -11,7 +11,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
-#import <array>
 #import <ranges>
 #import <string_view>
 #import <unordered_set>
@@ -1437,29 +1436,35 @@ static RCTBorderStyle RCTBorderStyleFromOutlineStyle(OutlineStyle outlineStyle)
                  borderCurve:(BorderCurve)borderCurve
 {
   if (borderCurve == BorderCurve::Continuous) {
-    const std::array<CGSize, 4> corners{
-        cornerInsets.topLeft, cornerInsets.topRight, cornerInsets.bottomLeft, cornerInsets.bottomRight};
-    const std::array<CACornerMask, 4> cornerMasks{
-        kCALayerMinXMinYCorner, kCALayerMaxXMinYCorner, kCALayerMinXMaxYCorner, kCALayerMaxXMaxYCorner};
+    const struct {
+      CGSize size;
+      CACornerMask mask;
+    } corners[] = {
+        {cornerInsets.topLeft, kCALayerMinXMinYCorner},
+        {cornerInsets.topRight, kCALayerMaxXMinYCorner},
+        {cornerInsets.bottomLeft, kCALayerMinXMaxYCorner},
+        {cornerInsets.bottomRight, kCALayerMaxXMaxYCorner}};
     CGFloat radius = 0;
     CACornerMask maskedCorners = 0;
     bool useCoreAnimationMask = true;
-    for (size_t index = 0; index < corners.size(); index++) {
-      const auto &corner = corners[index];
-      if (corner.width != corner.height || (corner.width != 0 && radius != 0 && corner.width != radius)) {
+    for (const auto &corner : corners) {
+      if (CGSizeEqualToSize(corner.size, CGSizeZero)) {
+        continue;
+      }
+      if (corner.size.width != corner.size.height || (radius != 0 && corner.size.width != radius)) {
         useCoreAnimationMask = false;
         break;
       }
-      if (corner.width != 0) {
-        radius = corner.width;
-        maskedCorners |= cornerMasks[index];
-      }
+      radius = corner.size.width;
+      maskedCorners |= corner.mask;
     }
 
-    if (useCoreAnimationMask) {
+    if (useCoreAnimationMask && radius > 0 && radius <= MIN(bounds.size.width, bounds.size.height) / 2) {
       // Core Animation supports a shared radius on any subset of corners. A
       // rounded-rect CGPath would replace the requested continuous curve with
       // circular arcs, including when only the top or bottom corners are round.
+      // Larger asymmetric radii need the path renderer: a native layer distorts
+      // the square corners when its radius exceeds half the shorter dimension.
       CALayer *maskLayer = [CALayer layer];
       maskLayer.frame = bounds;
       maskLayer.backgroundColor = UIColor.blackColor.CGColor;
